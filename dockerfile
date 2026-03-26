@@ -43,6 +43,9 @@ RUN cp .env.example .env
 # Generate application key
 RUN php artisan key:generate
 
+# Run database migrations
+RUN php artisan migrate --force
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage
