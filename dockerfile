@@ -48,7 +48,17 @@ RUN chmod -R 755 /var/www/html/storage
 RUN chmod -R 755 /var/www/html/bootstrap/cache
 
 # Configure PHP-FPM to listen on port 9000
-RUN sed -i 's/listen = \/run\/php\/php8.2-fpm.sock/listen = 9000/' /etc/php/8.2/fpm/pool.d/www.conf
+RUN echo "[www]" > /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "user = www-data" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "group = www-data" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "listen = 9000" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "listen.owner = www-data" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "listen.group = www-data" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "pm = dynamic" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "pm.max_children = 5" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "pm.start_servers = 2" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "pm.min_spare_servers = 1" >> /etc/php/8.2/fpm/pool.d/www.conf && \
+    echo "pm.max_spare_servers = 3" >> /etc/php/8.2/fpm/pool.d/www.conf
 
 # Configure nginx
 COPY nginx.conf /etc/nginx/sites-available/default
