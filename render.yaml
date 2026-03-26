@@ -5,7 +5,7 @@ services:
     env: docker
     repo: https://github.com/jarvishiv62/Brand_Mantra.git
     rootDir: .
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./dockerfile
     dockerContext: .
     plan: free
     region: oregon
