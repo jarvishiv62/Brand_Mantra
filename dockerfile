@@ -2,7 +2,7 @@ FROM php:8.2-fpm
 
 # BrandMantra Laravel Application Dockerfile
 
-# Install system dependencies
+# Install system dependencies including nginx
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     nodejs \
-    npm
+    npm \
+    nginx
 
 # Clear package cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -46,6 +47,11 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage
 RUN chmod -R 755 /var/www/html/bootstrap/cache
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+# Configure nginx
+COPY nginx.conf /etc/nginx/sites-available/default
+
+# Expose port 80 for HTTP traffic
+EXPOSE 80
+
+# Start nginx and php-fpm
+CMD service nginx start && php-fpm
