@@ -15,6 +15,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if (!file_exists(public_path('build/manifest.json')))
+        <link rel="stylesheet" href="{{ asset('build/assets/app-B_sZZ52w.css') }}">
+        <script src="{{ asset('build/assets/app-e3ppTjh-.js') }}" defer></script>
+    @endif
 </head>
 
 <body x-data>
