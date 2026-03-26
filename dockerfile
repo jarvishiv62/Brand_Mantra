@@ -52,4 +52,4 @@ RUN chmod -R 755 /var/www/html/bootstrap/cache
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Start services
-CMD php artisan migrate --force && service nginx start && php-fpm
+CMD service nginx start && php-fpm
