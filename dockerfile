@@ -1,25 +1,20 @@
 FROM php:8.2-fpm
 
-# BrandMantra Laravel Application Dockerfile
-
-# Install system dependencies including nginx
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
+    nginx \
     zip \
     unzip \
+    git \
+    curl \
     nodejs \
-    npm \
-    nginx
+    npm
 
 # Clear package cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -27,7 +22,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy existing application directory contents
+# Copy project files
 COPY . /var/www/html
 
 # Install Node.js dependencies and build assets
@@ -47,11 +42,8 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage
 RUN chmod -R 755 /var/www/html/bootstrap/cache
 
-# Configure nginx
-COPY nginx.conf /etc/nginx/sites-available/default
+# Copy nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose port 80 for HTTP traffic
-EXPOSE 80
-
-# Start nginx and php-fpm
+# Start services
 CMD service nginx start && php-fpm
