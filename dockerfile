@@ -47,6 +47,9 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage
 RUN chmod -R 755 /var/www/html/bootstrap/cache
 
+# Configure PHP-FPM to listen on port 9000
+RUN sed -i 's/listen = \/run\/php\/php8.2-fpm.sock/listen = 9000/' /etc/php/8.2/fpm/pool.d/www.conf
+
 # Configure nginx
 COPY nginx.conf /etc/nginx/sites-available/default
 
