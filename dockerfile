@@ -43,9 +43,6 @@ RUN cp .env.example .env
 # Generate application key
 RUN php artisan key:generate
 
-# Run database migrations
-RUN php artisan migrate --force
-
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage
@@ -55,4 +52,4 @@ RUN chmod -R 755 /var/www/html/bootstrap/cache
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Start services
-CMD service nginx start && php-fpm
+CMD php artisan migrate --force && service nginx start && php-fpm
