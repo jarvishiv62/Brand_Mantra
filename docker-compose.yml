@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: brandmantra-app
+    container_name: brandmantra-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - brandmantra-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: brandmantra-nginx
+    restart: unless-stopped
+    ports:
+      - "10000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - brandmantra-network
+
+networks:
+  brandmantra-network:
+    driver: bridge

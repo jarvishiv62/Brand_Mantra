@@ -1,49 +1,29 @@
 services:
+  # Web Service
   - type: web
     name: brandmantra
-    env: php
-    region: singapore
+    env: docker
+    repo: https://github.com/jarvishiv62/Brand_Mantra.git
+    rootDir: .
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     plan: free
-    buildCommand: |
-      composer install --optimize-autoloader --no-dev
-      npm install
-      npm run build
-      php artisan key:generate --force
-      php artisan storage:link
-      php artisan config:cache
-      php artisan route:cache
-      php artisan view:cache
-      php artisan migrate --force
-    startCommand: php artisan serve --host=0.0.0.0 --port=10000
+    region: oregon
+    branch: main
+    healthCheckPath: /
     envVars:
-      - key: APP_NAME
-        value: BrandMantra
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
-      - key: APP_KEY
-        generateValue: true
       - key: APP_URL
-        fromService:
-          type: web
-          name: brandmantra
-          property: host
-      - key: DB_CONNECTION
-        value: pgsql
+        value: https://brandmantra.onrender.com
       - key: DB_HOST
-        fromDatabase:
-          name: brandmantra-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: brandmantra-db
-          property: port
+        value: brandmantra-db
       - key: DB_DATABASE
-        fromDatabase:
-          name: brandmantra-db
-          property: database
+        value: brandmantra
       - key: DB_USERNAME
+        value: brandmantra
         fromDatabase:
           name: brandmantra-db
           property: user
@@ -51,9 +31,9 @@ services:
         fromDatabase:
           name: brandmantra-db
           property: password
-      - key: SESSION_DRIVER
-        value: file
       - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
         value: file
       - key: LOG_CHANNEL
         value: stderr
